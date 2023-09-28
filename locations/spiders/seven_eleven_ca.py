@@ -10,7 +10,9 @@ class SevenElevenCASpider(YextSpider):
     def parse_item(self, item, location):
         item.pop("twitter")
 
-        apply_yes_no(Extras.DELIVERY, item, "c_delivery" in location)
+        if "c_delivery" in location:
+            apply_yes_no(Extras.DELIVERY, item, location["c_delivery"], False)
+        
         apply_yes_no(Extras.ATM, item, "SCOTIABANK_ATM" in location["c_7ElevenServices2"])
         apply_yes_no(Extras.WIFI, item, "WIFI" in location["c_7ElevenServices2"])
 
