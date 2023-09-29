@@ -1,5 +1,6 @@
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.dict_parser import DictParser
 from locations.hours import OpeningHours
 
@@ -34,4 +35,5 @@ class BottegAvenetaSpider(scrapy.Spider):
                     close_time=hour.get("openFromTo").split(" - ")[1],
                 )
             item["opening_hours"] = oh.as_opening_hours()
+            apply_category({"shop": "fashion_accessories"}, item)
             yield item
