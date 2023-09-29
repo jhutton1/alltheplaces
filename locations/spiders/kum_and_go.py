@@ -3,6 +3,7 @@ import json
 
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.items import Feature
 from locations.searchable_points import open_searchable_points
 
@@ -37,7 +38,7 @@ class KumAndGoSpider(scrapy.Spider):
     def parse(self, response):
         result = json.loads(response.text)
         for store in result:
-            yield Feature(
+            item = Feature(
                 ref=store["id"],
                 lon=store["lng"],
                 lat=store["lat"],
@@ -49,3 +50,7 @@ class KumAndGoSpider(scrapy.Spider):
                 phone=store["phone"],
                 website=store["permalink"],
             )
+            apply_category(Categories.SHOP_CONVENIENCE, item)
+
+            yield item
+
