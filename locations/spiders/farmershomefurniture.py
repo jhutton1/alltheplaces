@@ -2,6 +2,7 @@ import re
 
 import scrapy
 
+from locations.categories import Categories
 from locations.hours import OpeningHours
 from locations.items import Feature
 
@@ -12,6 +13,7 @@ class FarmersHomeFurnitureSpider(scrapy.Spider):
         "brand": "Farmers Home Furniture",
         "brand_wikidata": "Q114870935",
         "country": "US",
+        "extras": Categories.SHOP_FURNITURE.value,
     }
     allowed_domains = ["www.farmershomefurniture.com"]
     start_urls = ["https://www.farmershomefurniture.com/store-list.inc"]
