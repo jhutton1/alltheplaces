@@ -2,6 +2,7 @@ import html
 
 from scrapy import Selector, Spider
 
+from locations.categories import Categories, apply_category
 from locations.dict_parser import DictParser
 from locations.hours import OpeningHours
 
@@ -28,5 +29,7 @@ class SunLoanUSSpider(Spider):
             hours_string = " ".join(hours_html.xpath("//text()").getall())
             item["opening_hours"] = OpeningHours()
             item["opening_hours"].add_ranges_from_string(hours_string)
+
+            apply_category(Categories.SHOP_MONEY_LENDER, item)
 
             yield item
