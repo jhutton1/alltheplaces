@@ -2,6 +2,7 @@ import re
 
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.hours import DAYS, OpeningHours
 from locations.items import Feature
 
@@ -61,8 +62,11 @@ class InglesSpider(scrapy.Spider):
         hours = self.parse_hours(" ".join(response.xpath("/html/body/fieldset/div[2]/text()")[1].getall()).strip())
         if hours:
             properties["opening_hours"] = hours
+            
+        item = Feature(**properties)
+        apply_category(Categories.SHOP_SUPERMARKET, item)
 
-        yield Feature(**properties)
+        yield item
 
     def parse(self, response):
         for store in response.xpath("//markers/marker"):
