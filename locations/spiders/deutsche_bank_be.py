@@ -1,5 +1,6 @@
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.hours import DAYS, OpeningHours
 from locations.items import Feature
 from locations.spiders.vapestore_gb import clean_address
@@ -23,7 +24,7 @@ class DeutscheBankBESpider(scrapy.Spider):
             street_address = clean_address(store.get("address").get("fr").replace("<br />", ","))
             phone = store.get("phone").get("fr")
 
-            yield Feature(
+            item = Feature(
                 {
                     "ref": store.get("branchId"),
                     "name": store.get("id"),
@@ -34,3 +35,6 @@ class DeutscheBankBESpider(scrapy.Spider):
                     "lon": store.get("long"),
                 }
             )
+
+            apply_category(Categories.BANK, item)
+            yield item
