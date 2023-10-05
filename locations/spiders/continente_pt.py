@@ -1,5 +1,6 @@
 from scrapy import Spider
 
+from locations.categories import Categories, apply_category
 from locations.dict_parser import DictParser
 from locations.hours import DAYS, OpeningHours
 
@@ -8,11 +9,10 @@ class ContinentePTSpider(Spider):
     name = "continente_pt"
     start_urls = ["https://prod.limmia-continente-public-api.com/localsPages/listLocalsPages"]
 
-    brands = [
-        {"brand": "Continente Modelo", "brand_wikidata": "Q1892188"},
-        {"brand": "Continente Bom Dia"},
-        {"brand": "Continente", "brand_wikidata": "Q2995683"},
-    ]
+    item_attributes = {
+        "brand": "Continente", 
+        "brand_wikidata": "Q2995683",
+    }
 
     def parse(self, response, **kwargs):
         for location in response.json()["response"]["locations"]:
@@ -28,10 +28,7 @@ class ContinentePTSpider(Spider):
                 if photo["type"] == "MAIN":
                     item["image"] = photo["publicUrl"]
                     break
+            apply_category(Categories.SHOP_SUPERMARKET, item)
 
-            for brand in self.brands:
-                if brand["brand"].lower() in item["name"].lower():
-                    item.update(brand)
-                    break
 
             yield item
