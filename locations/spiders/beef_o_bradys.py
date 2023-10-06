@@ -1,5 +1,6 @@
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.items import Feature
 
 
@@ -33,4 +34,8 @@ class BeefOBradysSpider(scrapy.Spider):
                 },
             }
 
-            yield Feature(**properties)
+            item = Feature(**properties)
+
+            apply_category(Categories.RESTAURANT, item)
+
+            yield item
