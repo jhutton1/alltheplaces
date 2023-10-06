@@ -1,5 +1,6 @@
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.geo import point_locations
 from locations.items import Feature
 
@@ -31,5 +32,11 @@ class RenaultNLSpider(scrapy.Spider):
                 item["postcode"] = data.get("address", {}).get("postalCode")
                 item["street_address"] = data.get("address", {}).get("streetAddress")
                 item["phone"] = data.get("telephone", {}).get("value")
+                if data.get("dealerActivities"):
+                    for x in data.get("dealerActivities"):
+                        if x.get("description") == "Onderhoud & Reparatie":
+                            apply_category(Categories.SHOP_CAR_REPAIR, item)
+                apply_category(Categories.SHOP_CAR, item)
+
 
                 yield item
