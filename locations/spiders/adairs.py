@@ -1,6 +1,7 @@
 from scrapy import Spider
 from scrapy.http import JsonRequest
 
+from locations.categories import Categories, apply_category
 from locations.dict_parser import DictParser
 from locations.hours import DAYS_FULL, OpeningHours
 
@@ -56,5 +57,6 @@ class AdairsSpider(Spider):
                             hours_string = f"{hours_string} {day_name}: " + day_hours["hours"]
                             break
                 item["opening_hours"].add_ranges_from_string(hours_string)
+            apply_category({"shop": "household_linen"}, item)
 
             yield item
