@@ -1,11 +1,12 @@
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.items import Feature
 
 
 class TherapieClinicSpider(scrapy.Spider):
     name = "therapie_clinic"
-    item_attributes = {"brand": "Thérapie Clinic"}
+    item_attributes = {"brand": "Thérapie Clinic", "brand_wikidata": "Q123034602"}
     allowed_domains = ["www.therapieclinic.com"]
     start_urls = ["https://www.therapieclinic.com/our-clinics/"]
 
@@ -32,4 +33,7 @@ class TherapieClinicSpider(scrapy.Spider):
             properties["lat"] = lat.strip()
             properties["lon"] = lon.strip()
 
-            yield Feature(**properties)
+            item = Feature(**properties)
+            apply_category(Categories.SHOP_BEAUTY, item)
+            yield item
+
