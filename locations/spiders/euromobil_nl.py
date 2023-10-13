@@ -3,6 +3,7 @@ import re
 
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.items import Feature
 
 
@@ -10,7 +11,7 @@ class EuroMobilNLSpider(scrapy.Spider):
     name = "euromobil_nl"
     start_urls = ["https://euromobil.nl/contact/"]
 
-    item_attributes = {"brand": "Euromobil"}
+    item_attributes = {"brand": "Euromobil", "brand_wikidata": "Q1375118"}
 
     def parse(self, response, **kwargs):
         pattern = r"var\s+partners\s*=\s*(\[.*?\]);\s*var"
@@ -18,7 +19,7 @@ class EuroMobilNLSpider(scrapy.Spider):
         stores_json = json.loads(re.search(pattern, raw.extract_first(), re.DOTALL).group(1))
         for store in stores_json:
             coordinates = store.get("geo")
-            yield Feature(
+            item =  Feature(
                 {
                     "ref": store.get("nummer"),
                     "name": store.get("title"),
@@ -33,3 +34,6 @@ class EuroMobilNLSpider(scrapy.Spider):
                     "lon": coordinates.get("lng"),
                 }
             )
+            apply_category(Categories.CAR_RENTAL, item)
+            yield item
+
