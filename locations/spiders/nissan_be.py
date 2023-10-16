@@ -1,5 +1,6 @@
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.items import Feature
 
 
@@ -34,5 +35,7 @@ class NissanSpider(scrapy.Spider):
         item["phone"] = data.get("contact", {}).get("phone")
         item["email"] = data.get("contact", {}).get("email")
         item["website"] = data.get("contact", {}).get("website")
+
+        apply_category(Categories.SHOP_CAR, item)
 
         yield item
