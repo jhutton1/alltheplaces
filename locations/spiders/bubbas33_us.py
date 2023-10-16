@@ -3,6 +3,7 @@ import re
 
 from scrapy.spiders import SitemapSpider
 
+from locations.categories import Categories, apply_category
 from locations.dict_parser import DictParser
 from locations.hours import OpeningHours
 from locations.spiders.vapestore_gb import clean_address
@@ -26,5 +27,6 @@ class Bubbas33USSpider(SitemapSpider):
             item["opening_hours"].add_range(
                 rule["day"], rule["hours"]["openTime"], rule["hours"]["closeTime"], time_format="%I:%M%p"
             )
+        apply_category(Categories.RESTAURANT, item)
 
         yield item
