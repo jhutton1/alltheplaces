@@ -1,5 +1,6 @@
 import scrapy
 
+from locations.categories import Categories, apply_category
 from locations.items import Feature
 
 
@@ -7,7 +8,7 @@ class MiniSpider(scrapy.Spider):
     name = "renault_be"
     item_attributes = {
         "brand": "Renault",
-        "brand_wikidata": "Q98584518",
+        "brand_wikidata": "Q6686",
     }
     allowed_domains = ["renault.be"]
     start_urls = [
@@ -26,5 +27,12 @@ class MiniSpider(scrapy.Spider):
             item["lon"] = row.get("geolocalization", {}).get("lon")
             item["country"] = row.get("country")
             item["phone"] = row.get("telephone", {}).get("value")
+
+            if row.get("dealerActivities"):
+                for x in row.get("dealerActivities"):
+                    if x.get("description") in ["Atelier Carrosserie", "Atelier Mecanique"]:
+                        apply_category(Categories.SHOP_CAR_REPAIR, item)
+
+            apply_category(Categories.SHOP_CAR, item)
 
             yield item
