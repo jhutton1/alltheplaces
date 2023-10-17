@@ -1,3 +1,4 @@
+from locations.categories import Categories, apply_category
 from locations.hours import OpeningHours
 from locations.storefinders.freshop import FreshopSpider
 
@@ -14,4 +15,5 @@ class FoodtownUS(FreshopSpider):
             hours_string = location["hours_md"].upper().replace("7 DAYS A WEEK", "Mon-Sun")
             item["opening_hours"] = OpeningHours()
             item["opening_hours"].add_ranges_from_string(hours_string)
+        apply_category(Categories.SHOP_SUPERMARKET, item)
         yield item
