@@ -19,11 +19,13 @@ class NissanSpider(scrapy.Spider):
     def parse(self, response):
         for data in response.json().get("dealers"):
             url = f"https://nl.nissan.be/content/nissan_prod/nl_BE/index/dealer-finder/jcr:content/freeEditorial/contentzone_e70c/columns/columns12_5fe8/col1-par/find_a_dealer_6ff2.extendeddealer.json/dealerId/{data.get('id')}/data.json"
+            print(url)
             yield scrapy.Request(url=url, callback=self.parse_dealer)
 
     def parse_dealer(self, response):
         item = Feature()
         data = response.json()
+            
         item["ref"] = data.get("dealerId")
         item["name"] = data.get("tradingName")
         item["street_address"] = data.get("address", {}).get("addressLine1")
@@ -37,5 +39,8 @@ class NissanSpider(scrapy.Spider):
         item["website"] = data.get("contact", {}).get("website")
 
         apply_category(Categories.SHOP_CAR, item)
+        for i in data.get("dealerServices"):
+            if i.get("name") == 'Elektrische voertuigen':
+                apply_category(Categories.SHOP_CAR_REPAIR, item)
 
         yield item
