@@ -40,7 +40,7 @@ class NissanSpider(scrapy.Spider):
 
         apply_category(Categories.SHOP_CAR, item)
         for i in data.get("dealerServices"):
-            if i.get("name") == 'Elektrische voertuigen':
+            if i.get("name") == 'Erkend koetswerkhersteller':
                 apply_category(Categories.SHOP_CAR_REPAIR, item)
 
         yield item
