@@ -46,7 +46,7 @@ class NissanSpider(scrapy.Spider):
         if any(item in services for item in sales_list):
             apply_category(Categories.SHOP_CAR, item)
             if 'Erkend koetswerkhersteller' in services:
-                apply_yes_no("service:vehicle:truck_repair", item, True)
+                apply_yes_no("service:vehicle:car_repair", item, True)
         else:
             if 'Erkend koetswerkhersteller' in services:
                 apply_category(Categories.SHOP_CAR_REPAIR, item)
