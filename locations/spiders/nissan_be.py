@@ -1,6 +1,6 @@
 import scrapy
 
-from locations.categories import Categories, apply_category
+from locations.categories import Categories, apply_category, apply_yes_no
 from locations.items import Feature
 
 
@@ -19,12 +19,12 @@ class NissanSpider(scrapy.Spider):
     def parse(self, response):
         for data in response.json().get("dealers"):
             url = f"https://nl.nissan.be/content/nissan_prod/nl_BE/index/dealer-finder/jcr:content/freeEditorial/contentzone_e70c/columns/columns12_5fe8/col1-par/find_a_dealer_6ff2.extendeddealer.json/dealerId/{data.get('id')}/data.json"
-            print(url)
             yield scrapy.Request(url=url, callback=self.parse_dealer)
 
     def parse_dealer(self, response):
         item = Feature()
         data = response.json()
+
             
         item["ref"] = data.get("dealerId")
         item["name"] = data.get("tradingName")
@@ -37,10 +37,18 @@ class NissanSpider(scrapy.Spider):
         item["phone"] = data.get("contact", {}).get("phone")
         item["email"] = data.get("contact", {}).get("email")
         item["website"] = data.get("contact", {}).get("website")
+        self.logger.info(item["website"])
 
-        apply_category(Categories.SHOP_CAR, item)
-        for i in data.get("dealerServices"):
-            if i.get("name") == 'Erkend koetswerkhersteller':
+        services = [i['name'] for i in data.get("dealerServices")]
+    
+        sales_list = ['Business Center','Testrit','Elektrische voertuigen','Lichte bedrijfsvoertuigen','Personenwagens']
+
+        if any(item in services for item in sales_list):
+            apply_category(Categories.SHOP_CAR, item)
+            if 'Erkend koetswerkhersteller' in services:
+                apply_yes_no("service:vehicle:truck_repair", item, True)
+        else:
+            if 'Erkend koetswerkhersteller' in services:
                 apply_category(Categories.SHOP_CAR_REPAIR, item)
 
         yield item
