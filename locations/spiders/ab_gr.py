@@ -11,7 +11,7 @@ from locations.dict_parser import DictParser
 
 class AbGRSpider(Spider):
     name = "ab_gr"
-    item_attributes = {"brand": "AB", "brand_wikidata": "Q4721807", "nsi_id": "N/A"}
+    item_attributes = {"brand": "AB", "brand_wikidata": "asdf", "nsi_id": "N/A"}
 
     def start_requests(self) -> Iterable[Request]:
         yield JsonRequest(
