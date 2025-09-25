@@ -10,7 +10,7 @@ class SabaSpider(JSONBlobSpider):
     name = "saba"
     item_attributes = {
         "brand": "Saba",
-        "brand_wikidata": "Q30688181",
+        "brand_wikidata": "Q67808022",  
     }
     start_urls = [
         "https://www.sabaparking.co.uk/o/sabine/v1.0/countries/GB/languages/EN/parkings-clusters"
@@ -30,6 +30,6 @@ class SabaSpider(JSONBlobSpider):
         apply_yes_no(PaymentMethods.VISA, item, feature["paymentByVisa"], True)
         
         apply_category(Categories.PARKING, item)
-        
+
         yield item
        
