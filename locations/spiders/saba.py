@@ -6,7 +6,7 @@ from locations.json_blob_spider import JSONBlobSpider
 from locations.categories import PaymentMethods, apply_category, Categories, apply_yes_no
 
 
-class SabaSpider(JSONBlobSpider):
+class SabaSpider(JSONBlobSpider): ###
     name = "saba"
     item_attributes = {
         "brand": "Saba",
