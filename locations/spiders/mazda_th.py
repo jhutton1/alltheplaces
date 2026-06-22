@@ -29,7 +29,8 @@ class MazdaTHSpider(JSONBlobSpider):
         yield Request(url=f"https://www.mazda.co.th/_next/data/{next_build_manifest_url}/th/dealer.json")
 
     def pre_process_data(self, feature: dict) -> None:
-        feature.update(feature.pop("detail"))
+        if detail := feature.pop("detail", None):
+            feature.update(detail)
 
     def post_process_item(self, item: Feature, response: Response, feature: dict) -> Iterable[Feature]:
         if feature["ServiceTypeID"] and len(feature["ServiceTypeID"]) > 0:
