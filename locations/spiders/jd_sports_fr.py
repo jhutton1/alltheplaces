@@ -12,4 +12,3 @@ class JdSportsFRSpider(CrawlSpider, StructuredDataSpider, PlaywrightSpider):
     start_urls = ["https://www.jdsports.fr/store-locator/all-stores/"]
     rules = [Rule(LinkExtractor(allow="store-locator/", deny="-soon"), callback="parse_sd")]
     custom_settings = DEFAULT_PLAYWRIGHT_SETTINGS
-    requires_proxy = True
