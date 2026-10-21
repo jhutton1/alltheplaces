@@ -35,7 +35,6 @@ class WeldomSpider(JSONBlobSpider):
     start_urls = ["https://www.weldom.fr/graphql?query=" + quote(QUERY)]
     locations_key = ["data", "storeList", "items"]
     # DataDome blocks CI's datacenter IPs, even for a real browser.
-    requires_proxy = "FR"
     # DataDome bans the project user agent even through the proxy, so the proxy
     # is left to choose one. robots.txt disallows /graphql.
     custom_settings = {"USER_AGENT": None, "ROBOTSTXT_OBEY": False}
